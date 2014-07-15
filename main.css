@@ -3,13 +3,13 @@ img{
 	height: 150px;
 }
 
-.up-arrow, .left-arrow, .right-arrow{
+.up-arrow, .left-arrow, .right-arrow, .down-arrow{
 	width: 150px;
 	height: 150px;
 	text-align: center;
 }
 
-.icon-up-bold, .icon-left-bold, .icon-right-bold{
+.icon-up-bold, .icon-left-bold, .icon-right-bold, .icon-down-bold{
 	line-height: 150px;
 	vertical-align: center;
 
