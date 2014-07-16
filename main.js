@@ -21,6 +21,7 @@
 var Game = (function(){
 	var ONE_SIDE_GRID = 6;  //currently the grid is hard-coded with 6x6(including
 						// all the arrows; so actually only 4x4 real contents) 
+	var ROWS = 4;
 
 	// var UpArrow = function(){
 
@@ -58,28 +59,28 @@ var Game = (function(){
 	var NinjaSword = function(){
 	}
 	NinjaSword.prototype.create = function(){
-		this.el = $('<div class="icon ninjaSword"><img src="ninja_sword.jpg"></div>');
+		this.el = $('<div class="ninjaSword"><img src="ninja_sword.jpg"></div>');
 		return this.el;
 	}
 
 	var NinjaShadow = function(){
 	}
 	NinjaShadow.prototype.create = function(){
-		this.el = $('<div class="icon ninjaShadow"><img src="ninja_shadow.jpg"></div>');
+		this.el = $('<div class="ninjaShadow"><img src="ninja_shadow.jpg"></div>');
 		return this.el;
 	}
 
 	var EnergyDrink = function(){
 	}
 	EnergyDrink.prototype.create = function(){
-		this.el = $('<div class="icon energyDrink"><img src="energy_drink.jpg"></div>');
+		this.el = $('<div class="energyDrink"><img src="energy_drink.jpg"></div>');
 		return this.el;
 	} 
 
 	var SmokeBomb = function(){
 	}
 	SmokeBomb.prototype.create = function(){
-		this.el = $('<div class="icon smokeBomb"><img src="smoke_bomb.png"></div>');
+		this.el = $('<div class="smokeBomb"><img src="smoke_bomb.png"></div>');
 		return this.el;
 	} 
 
@@ -103,21 +104,64 @@ var Game = (function(){
 		arrayIcon.push(iconStarEl, iconSwordEl, iconShadowEl, iconEnergyDrinkEl, iconSmokeBombEl);
 
 		var len = arrayIcon.length;
-		var icon = arrayIcon[Math.floor(Math.random()*len)];
+		var icon = $(arrayIcon[Math.floor(Math.random()*len)]);
 		return icon;
 	}
 
-	var rows = [];
+	
+
+	// var GenerateIconList = function(){
+	// 	this.rows = [[], [], [], []];
+
+	// }
+
+	// var generateIconList = new GenerateIconList();
+
+	var rows = [[], [], [], []];
+	var middleArray = [];
+	var index = 0;
+
+	var generateIconList = function(){
+		for(var i=0; i<ROWS; i++){
+			for(var j=0; j<ROWS; j++){
+				rows[i].push(middleArray[index]);
+				index++;
+
+			}
+		}
+	}
+
+
 
 	var renderIcon = function(){
 		$('.empty').each(function(index, item){		
-			$(item).append(generateIcon());
+			var ans = generateIcon();
+			$(item).append(ans);
+			$(item).removeClass('empty').addClass('full');
+
+			var iconObj = $(ans).attr('class');
+		  	middleArray.push(iconObj); 
+			// generateIconList(iconObj);
+
 		})
 		
 
 	}
 
+	// var generateIconList = function(){
+	// 	$('.full').each(function(index, item){
+	// 		var ans = $(item).children().attr('class');
 
+
+	// 	})
+	// }
+
+
+// document.getElementById("Target").className;
+
+	var init = function(){
+		renderIcon();
+	}
 
 
 	
@@ -140,8 +184,8 @@ var Game = (function(){
 
 
 	return {
-		generateIcon: generateIcon,
-		renderIcon: renderIcon
+		init: init,
+		generateIconList: generateIconList
 
 
 	}
@@ -155,6 +199,7 @@ $(document).on('ready', function() {
 	// $('#x0_y1').append(ninjashadow.create());
 	// $('#x1_y1').append(ninjashadow.create());
 	 // Game.init();
-	 Game.renderIcon();
+	 Game.init();
+	 Game.generateIconList();
 
 });
