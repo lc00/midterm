@@ -199,35 +199,72 @@ var Match3 = (function(){
 		var len = ROWS - 2;
 		var numOfMatches;
 		
+		//check for horizontal matches
 		for( var i=0; i<ROWS; i++){
-			var matches = this.rows[i];
+			var row = this.rows[i];
 			
 			for( var n=0; n<len; n++){
 				numOfMatches = 1;
 
-				for( var m=1; m<ROWS; m++){
-					if (matches[n].type === matches[n+m].type){
+				for( var m=1; m<ROWS-n; m++){
+					if (row[n].type === row[m+n].type){
 						numOfMatches += 1;
-
 					}
 					else{
 						break;
-					}
-						
+					}					
 				}
 				if (numOfMatches >= 3 ){
-					for(var z=n; z<numOfMatches+n; z++){
-						matches[z].matched = true;
-						console.log(i, m, z, numOfMatches)
-					}
-				}
-				
+					// for(var z=n; z<numOfMatches+n; z++){
+					// 	row[z].matched = true;
+					// }
+					row.slice(n, n+numOfMatches).forEach(function(tile){
+						tile.matched = true;
+						// console.log("horizontal", i, n, numOfMatches)
+					})
+				}				
+			}
+		}
+
+		//check for vertical matches
+		var array = this.rows; // this.rows is the entire array/list
+		var column = [];
+
+		for( var index=0; index<ROWS; index++){	
+
+			for( var i=0; i<ROWS; i++){
+				column.push(array[i][index]);  //pushing the array item into column(array)
 			}
 
+			for( var n=0; n<len; n++){
+				numOfMatches = 1;
 
+				for( var m=1; m<ROWS-n; m++){
+					if (column[n].type === column[m+n].type){
+						numOfMatches += 1;
+					}
+					else{
+						break;
+					}					
+				}
+				if ( numOfMatches >= 3 ){
+					// for(var z=n; z<numOfMatches+n; z++){
+					// 	row[z].matched = true;
+					// }
+					column.slice(n, n+numOfMatches).forEach(function(tile){
+						tile.matched = true;
+						// console.log("vertical", index, n, numOfMatches, tile.type)
+					})
+				}				
+			}
+			column = []; // empty column so to get the next index column in the array/index
+						
 			
-
+			
 		}
+
+
+
 
 
 	}
