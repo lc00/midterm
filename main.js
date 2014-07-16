@@ -108,12 +108,22 @@ var Match3 = (function(){
 	// 	return icon;
 	// }
 
+	var IconObj = function(name){
+		this.type = name;
+
+	}
+
+
 	var generateIconArray = ["ninjaShadow", "ninjaStar", "ninjaSword", "smokeBomb", "energyDrink"];
 	var len = generateIconArray.length;
 
+
+
 	var randomIcon = function(){
 		var iconName = generateIconArray[Math.floor(Math.random()*len)];
-		return iconName;
+		var iconObj = new IconObj(iconName);
+	
+		return iconObj;
 	}
 	
 
@@ -148,7 +158,7 @@ var Match3 = (function(){
 		$('.empty').each(function(index, item){		
 			// var ans = generateIcon();
 
-			var ans = middleArray[index];
+			var ans = middleArray[index].type;
 
 			if( ans === "ninjaStar"){
 				var tile = new NinjaStar();
@@ -184,6 +194,35 @@ var Match3 = (function(){
 
 		})
 	}
+
+	// Game.prototype.checkMatches = function(){
+	// 	var len = ROWS - 2;
+	// 	var matchArray = [];
+	// 	var numOfMatches = 0;
+
+	// 	for( var i=0; i<ROWS; i++){
+	// 		var matches = this.rows[i];
+	// 		for( var n=0; n<len; n++){
+	// 			for( var m=1; m<ROWS; m++){
+	// 				if (matches[n] === matches[n+m]){
+	// 					numOfMatches += 1;
+	// 				}
+						
+	// 			}
+	// 			if (numOfMatches >=3){
+
+	// 			}
+
+	// 		}
+
+
+			
+
+	// 	}
+
+
+	// }
+
 
 	Game.prototype.shiftLeft = function(){
 
