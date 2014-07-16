@@ -84,30 +84,37 @@ var Game = (function(){
 		return this.el;
 	} 
 
-	var generateIcon = function(){
-		var iconStar = new NinjaStar();
-		var iconStarEl = iconStar.create();
+	// var generateIcon = function(){
+	// 	var iconStar = new NinjaStar();
+	// 	var iconStarEl = iconStar.create();
 
-		var iconSword = new NinjaSword();
-		var iconSwordEl = iconSword.create();
+	// 	var iconSword = new NinjaSword();
+	// 	var iconSwordEl = iconSword.create();
 
-		var iconShadow = new NinjaShadow();
-		var iconShadowEl = iconShadow.create();
+	// 	var iconShadow = new NinjaShadow();
+	// 	var iconShadowEl = iconShadow.create();
 
-		var iconEnergyDrink = new EnergyDrink();
-		var iconEnergyDrinkEl = iconEnergyDrink.create();
+	// 	var iconEnergyDrink = new EnergyDrink();
+	// 	var iconEnergyDrinkEl = iconEnergyDrink.create();
 
-		var iconSmokeBomb = new SmokeBomb();
-		var iconSmokeBombEl = iconSmokeBomb.create();
-;
-		var arrayIcon = [];
-		arrayIcon.push(iconStarEl, iconSwordEl, iconShadowEl, iconEnergyDrinkEl, iconSmokeBombEl);
+	// 	var iconSmokeBomb = new SmokeBomb();
+	// 	var iconSmokeBombEl = iconSmokeBomb.create();
 
-		var len = arrayIcon.length;
-		var icon = $(arrayIcon[Math.floor(Math.random()*len)]);
-		return icon;
+	// 	var arrayIcon = [];
+	// 	arrayIcon.push(iconStarEl, iconSwordEl, iconShadowEl, iconEnergyDrinkEl, iconSmokeBombEl);
+
+	// 	var len = arrayIcon.length;
+	// 	var icon = $(arrayIcon[Math.floor(Math.random()*len)]);
+	// 	return icon;
+	// }
+
+	var generateIconArray = ["ninjaShadow", "ninjaStar", "ninjaSword", "smokeBomb", "energyDrink"];
+	var len = generateIconArray.length;
+
+	var randomIcon = function(){
+		var iconName = generateIconArray[Math.floor(Math.random()*len)];
+		return iconName;
 	}
-
 	
 
 	// var GenerateIconList = function(){
@@ -124,8 +131,10 @@ var Game = (function(){
 	var generateIconList = function(){
 		for(var i=0; i<ROWS; i++){
 			for(var j=0; j<ROWS; j++){
-				rows[i].push(middleArray[index]);
-				index++;
+				var nameClass = randomIcon();
+				
+				rows[i].push(nameClass);
+				middleArray.push(nameClass);
 
 			}
 		}
@@ -134,13 +143,42 @@ var Game = (function(){
 
 
 	var renderIcon = function(){
+
 		$('.empty').each(function(index, item){		
-			var ans = generateIcon();
-			$(item).append(ans);
+			// var ans = generateIcon();
+
+			var ans = middleArray[index];
+
+			if( ans === "ninjaStar"){
+				var tile = new NinjaStar();
+				var tileEl = tile.create();
+			}
+			else if( ans === "ninjaSword"){
+				var tile = new NinjaSword();
+				var tileEl = tile.create();
+			}
+			else if( ans === "ninjaShadow"){
+				var tile = new NinjaShadow();
+				var tileEl = tile.create();
+			}
+			else if( ans === "energyDrink"){
+				var tile = new EnergyDrink();
+				var tileEl = tile.create();
+			}
+			else {
+				var tile = new SmokeBomb();
+				var tileEl = tile.create();
+			}
+
+
+			index++;
+
+
+			$(item).append(tileEl);
 			$(item).removeClass('empty').addClass('full');
 
-			var iconObj = $(ans).attr('class');
-		  	middleArray.push(iconObj); 
+			// var iconObj = $(ans).attr('class');
+		 //  	middleArray.push(iconObj); 
 			// generateIconList(iconObj);
 
 		})
@@ -160,6 +198,7 @@ var Game = (function(){
 // document.getElementById("Target").className;
 
 	var init = function(){
+		generateIconList();
 		renderIcon();
 	}
 
@@ -184,8 +223,8 @@ var Game = (function(){
 
 
 	return {
-		init: init,
-		generateIconList: generateIconList
+		init: init
+		
 
 
 	}
@@ -200,6 +239,5 @@ $(document).on('ready', function() {
 	// $('#x1_y1').append(ninjashadow.create());
 	 // Game.init();
 	 Game.init();
-	 Game.generateIconList();
 
 });
