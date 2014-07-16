@@ -18,7 +18,7 @@
 
 
 
-var Game = (function(){
+var Match3 = (function(){
 	var ONE_SIDE_GRID = 6;  //currently the grid is hard-coded with 6x6(including
 						// all the arrows; so actually only 4x4 real contents) 
 	var ROWS = 4;
@@ -124,25 +124,26 @@ var Game = (function(){
 
 	// var generateIconList = new GenerateIconList();
 
-	var rows = [[], [], [], []];
+	// var rows = [[], [], [], []];
 	var middleArray = [];
 	var index = 0;
 
-	var generateIconList = function(){
+	var Game = function(){
+	}
+	Game.prototype.rows = [[], [], [], []];
+
+	Game.prototype.generateIconList = function(){
 		for(var i=0; i<ROWS; i++){
 			for(var j=0; j<ROWS; j++){
 				var nameClass = randomIcon();
 				
-				rows[i].push(nameClass);
+				this.rows[i].push(nameClass);
 				middleArray.push(nameClass);
-
 			}
 		}
 	}
 
-
-
-	var renderIcon = function(){
+	Game.prototype.renderIcons = function(){
 
 		$('.empty').each(function(index, item){		
 			// var ans = generateIcon();
@@ -182,44 +183,30 @@ var Game = (function(){
 			// generateIconList(iconObj);
 
 		})
-		
-
 	}
 
-	// var generateIconList = function(){
-	// 	$('.full').each(function(index, item){
-	// 		var ans = $(item).children().attr('class');
+	Game.prototype.shiftLeft = function(){
 
+	}
+	Game.prototype.shiftRight = function(){
 
-	// 	})
-	// }
+	}
+	Game.prototype.shiftUp = function(){
 
+	}
+	Game.prototype.shiftDown = function() {
 
-// document.getElementById("Target").className;
+	};
 
 	var init = function(){
-		generateIconList();
-		renderIcon();
+
+		var game = new Game();
+
+		game.generateIconList();
+		game.renderIcons();
 	}
 
 
-	
-
-	
-
-
-	this.shiftUp = function(){
-
-	}
-	this.shiftDown = function(){
-
-	}
-	this.shiftLeft = function(){
-
-	}
-	this.shiftRight = function(){
-
-	}
 
 
 	return {
@@ -238,6 +225,6 @@ $(document).on('ready', function() {
 	// $('#x0_y1').append(ninjashadow.create());
 	// $('#x1_y1').append(ninjashadow.create());
 	 // Game.init();
-	 Game.init();
+	 Match3.init();
 
 });
