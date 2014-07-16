@@ -195,33 +195,42 @@ var Match3 = (function(){
 		})
 	}
 
-	// Game.prototype.checkMatches = function(){
-	// 	var len = ROWS - 2;
-	// 	var matchArray = [];
-	// 	var numOfMatches = 0;
+	Game.prototype.checkMatches = function(){
+		var len = ROWS - 2;
+		var numOfMatches;
+		
+		for( var i=0; i<ROWS; i++){
+			var matches = this.rows[i];
+			
+			for( var n=0; n<len; n++){
+				numOfMatches = 1;
 
-	// 	for( var i=0; i<ROWS; i++){
-	// 		var matches = this.rows[i];
-	// 		for( var n=0; n<len; n++){
-	// 			for( var m=1; m<ROWS; m++){
-	// 				if (matches[n] === matches[n+m]){
-	// 					numOfMatches += 1;
-	// 				}
+				for( var m=1; m<ROWS; m++){
+					if (matches[n].type === matches[n+m].type){
+						numOfMatches += 1;
+
+					}
+					else{
+						break;
+					}
 						
-	// 			}
-	// 			if (numOfMatches >=3){
-
-	// 			}
-
-	// 		}
+				}
+				if (numOfMatches >= 3 ){
+					for(var z=n; z<numOfMatches+n; z++){
+						matches[z].matched = true;
+						console.log(i, m, z, numOfMatches)
+					}
+				}
+				
+			}
 
 
 			
 
-	// 	}
+		}
 
 
-	// }
+	}
 
 
 	Game.prototype.shiftLeft = function(){
@@ -243,6 +252,7 @@ var Match3 = (function(){
 
 		game.generateIconList();
 		game.renderIcons();
+		game.checkMatches();
 	}
 
 
