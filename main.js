@@ -22,31 +22,31 @@ var Game = (function(){
 	var ONE_SIDE_GRID = 6;  //currently the grid is hard-coded with 6x6(including
 						// all the arrows; so actually only 4x4 real contents) 
 
-	var UpArrow = function(){
+	// var UpArrow = function(){
 
-	}
-	UpArrow.prototype.create = function(){
-		this.el = $('<i class="icon-up-bold"></i>');
-		return this.el;
-	}
-	var DownArrow = function(){
-	}
-	DownArrow.prototype.create = function(){
-		this.el = $('<i class="icon-down-bold"></i>');
-		return this.el;
-	}
-	var LeftArrow = function(){
-	}
-	LeftArrow.prototype.create = function(){
-		this.el = $('<i class="icon-left-bold"></i>');
-		return this.el;
-	}
-	var RightArrow = function(){
-	}
-	RightArrow.prototype.create = function(){
-		this.el = $('<i class="icon-right-bold"></i>');
-		return this.el;
-	}
+	// }
+	// UpArrow.prototype.create = function(){
+	// 	this.el = $('<i class="icon-up-bold"></i>');
+	// 	return this.el;
+	// }
+	// var DownArrow = function(){
+	// }
+	// DownArrow.prototype.create = function(){
+	// 	this.el = $('<i class="icon-down-bold"></i>');
+	// 	return this.el;
+	// }
+	// var LeftArrow = function(){
+	// }
+	// LeftArrow.prototype.create = function(){
+	// 	this.el = $('<i class="icon-left-bold"></i>');
+	// 	return this.el;
+	// }
+	// var RightArrow = function(){
+	// }
+	// RightArrow.prototype.create = function(){
+	// 	this.el = $('<i class="icon-right-bold"></i>');
+	// 	return this.el;
+	// }
 
 	var NinjaStar = function(){
 	}
@@ -83,17 +83,44 @@ var Game = (function(){
 		return this.el;
 	} 
 
+	var generateIcon = function(){
+		var iconStar = new NinjaStar();
+		var iconStarEl = iconStar.create();
+
+		var iconSword = new NinjaSword();
+		var iconSwordEl = iconSword.create();
+
+		var iconShadow = new NinjaShadow();
+		var iconShadowEl = iconShadow.create();
+
+		var iconEnergyDrink = new EnergyDrink();
+		var iconEnergyDrinkEl = iconEnergyDrink.create();
+
+		var iconSmokeBomb = new SmokeBomb();
+		var iconSmokeBombEl = iconSmokeBomb.create();
+;
+		var arrayIcon = [];
+		arrayIcon.push(iconStarEl, iconSwordEl, iconShadowEl, iconEnergyDrinkEl, iconSmokeBombEl);
+
+		var len = arrayIcon.length;
+		var icon = arrayIcon[Math.floor(Math.random()*len)];
+		return icon;
+	}
 
 	var rows = [];
 
-
-	var init = function(){
-
-
+	var renderIcon = function(){
+		$('.empty').each(function(index, item){		
+			$(item).append(generateIcon());
+		})
 		
 
-		
 	}
+
+
+
+
+	
 
 	
 
@@ -113,8 +140,8 @@ var Game = (function(){
 
 
 	return {
-		init: init
-	
+		generateIcon: generateIcon,
+		renderIcon: renderIcon
 
 
 	}
@@ -127,6 +154,7 @@ $(document).on('ready', function() {
 	// var ninjashadow = new Game.NinjaShadow();
 	// $('#x0_y1').append(ninjashadow.create());
 	// $('#x1_y1').append(ninjashadow.create());
-	 Game.init();
+	 // Game.init();
+	 Game.renderIcon();
 
 });
