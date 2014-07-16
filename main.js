@@ -84,30 +84,20 @@ var Game = (function(){
 	} 
 
 
-	this.rows = [];
-
-	this.render = function(){
-		for(var i=0; i<ONE_SIDE_GRID; i++){
-			for(var j=0; j<ONE_SIDE_GRID; j++){
-				if( i === 0 && j === 0){
-					continue;
-				}
-
-				else if( i === 0 ){
-					var tile = new UpArrow();
-					var tileEl = tile.create();
-					$('#x0_y1').append(tileEl);
-				}
-				else{
-					continue;
-				}
-
-			}
-
-		}
+	var rows = [];
 
 
+	var init = function(){
+
+
+		
+
+		
 	}
+
+	
+
+
 	this.shiftUp = function(){
 
 	}
@@ -123,7 +113,8 @@ var Game = (function(){
 
 
 	return {
-		render: render
+		init: init
+	
 
 
 	}
@@ -136,6 +127,6 @@ $(document).on('ready', function() {
 	// var ninjashadow = new Game.NinjaShadow();
 	// $('#x0_y1').append(ninjashadow.create());
 	// $('#x1_y1').append(ninjashadow.create());
-	Game.render();
+	 Game.init();
 
 });
