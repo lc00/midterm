@@ -84,29 +84,6 @@ var Match3 = (function(){
 		return this.el;
 	} 
 
-	// var generateIcon = function(){
-	// 	var iconStar = new NinjaStar();
-	// 	var iconStarEl = iconStar.create();
-
-	// 	var iconSword = new NinjaSword();
-	// 	var iconSwordEl = iconSword.create();
-
-	// 	var iconShadow = new NinjaShadow();
-	// 	var iconShadowEl = iconShadow.create();
-
-	// 	var iconEnergyDrink = new EnergyDrink();
-	// 	var iconEnergyDrinkEl = iconEnergyDrink.create();
-
-	// 	var iconSmokeBomb = new SmokeBomb();
-	// 	var iconSmokeBombEl = iconSmokeBomb.create();
-
-	// 	var arrayIcon = [];
-	// 	arrayIcon.push(iconStarEl, iconSwordEl, iconShadowEl, iconEnergyDrinkEl, iconSmokeBombEl);
-
-	// 	var len = arrayIcon.length;
-	// 	var icon = $(arrayIcon[Math.floor(Math.random()*len)]);
-	// 	return icon;
-	// }
 
 	var IconObj = function(name){
 		this.type = name;
@@ -135,67 +112,71 @@ var Match3 = (function(){
 	// var generateIconList = new GenerateIconList();
 
 	// var rows = [[], [], [], []];
-	var middleArray = [];
-	var index = 0;
 
+	var index = 0;
+													// middleArray declaration
 	var Game = function(){
 	}
 	Game.prototype.rows = [[], [], [], []];
 
-	Game.prototype.generateIconList = function(){
-		for(var i=0; i<ROWS; i++){
-			for(var j=0; j<ROWS; j++){
+	Game.prototype.generateIconList = function(){  // this is the array/list
+		for(var r=0; r<ROWS; r++){
+			for(var c=0; c<ROWS; c++){
 				var obj = randomIcon();
 				
-				this.rows[i].push(obj);
-				middleArray.push(obj);
+				this.rows[r].push(obj);
+												// middleArray
 			}
 		}
 	}
 
-	Game.prototype.renderIcons = function(){
+	// Game.prototype.emptyIcons = function(){
+	// 	$('.grid').empty();
+	// 	console.log("yes")
+	// }
 
-		// var gridCellStatus = 
 
+	// var firstTimeRender = true;
 
-		$('.empty').each(function(index, item){		
-			// var ans = generateIcon();
+	Game.prototype.renderIcons = function(){		// rendering Icons to the grid display
 
-			var ans = middleArray[index].type;
+		$('.grid').empty();
 
-			if( ans === "ninjaStar"){
-				var tile = new NinjaStar();
-				var tileEl = tile.create();
+			for(var r=0; r<ROWS; r++){
+				for(var c=0; c<ROWS; c++){
+
+					var ans = this.rows[r][c].type;  // middleArray
+
+					if( ans === "ninjaStar"){
+						var tile = new NinjaStar();
+					}
+					else if( ans === "ninjaSword"){
+						var tile = new NinjaSword();
+					}
+					else if( ans === "ninjaShadow"){
+						var tile = new NinjaShadow();
+					}
+					else if( ans === "energyDrink"){
+						var tile = new EnergyDrink();
+					}
+					else {
+						var tile = new SmokeBomb();
+					}
+
+					var tileEl = tile.create();
+
+					$('#x' + r + '_y' + c).append(tileEl); 															
+					
+				}
 			}
-			else if( ans === "ninjaSword"){
-				var tile = new NinjaSword();
-				var tileEl = tile.create();
-			}
-			else if( ans === "ninjaShadow"){
-				var tile = new NinjaShadow();
-				var tileEl = tile.create();
-			}
-			else if( ans === "energyDrink"){
-				var tile = new EnergyDrink();
-				var tileEl = tile.create();
-			}
-			else {
-				var tile = new SmokeBomb();
-				var tileEl = tile.create();
-			}
-
-
-			index++;
-
-
-			$(item).append(tileEl);
-			$(item).removeClass('empty').addClass('full');
-
+			// $(item).removeClass('empty').addClass('full');
+		
 			// var iconObj = $(ans).attr('class');
 		 //  	middleArray.push(iconObj); 
 			// generateIconList(iconObj);
+	
+		// Match3.firstTimeRender = false;
 
-		})
 	}
 
 
@@ -226,7 +207,7 @@ var Match3 = (function(){
 					// }
 					row.slice(n, n+numOfMatches_horizontal).forEach(function(tile){
 						tile.matched = true;
-						console.log("horizontal", i, n, numOfMatches_horizontal)
+						console.log("horizontal", i, n, numOfMatches_horizontal, tile.type)
 					})
 
 					n += numOfMatches_horizontal;
@@ -275,9 +256,9 @@ var Match3 = (function(){
 		return numOfMatches_total;
 	}
 
-	Game.prototype.fillInTiles = function(){
-		this.rows.forEach(function(row){
-			row.forEach(function(tile, c){
+	Game.prototype.fillInTiles = function(){  // this is to replace the icon objects that are 
+		this.rows.forEach(function(row){		// matched/flagged with newly generated icon objects 
+			row.forEach(function(tile, c){		// in the array
 				if(tile.matched){
 					row[c] = randomIcon();
 				}
@@ -288,15 +269,22 @@ var Match3 = (function(){
 
 
 
-	Game.prototype.shiftLeft = function(){
+
+
+	Game.prototype.shiftLeft = function(){   // operation on the array
+		// var index = $(this).data('index');
+		// var row = 
 
 	}
+
 	Game.prototype.shiftRight = function(){
 
 	}
+	
 	Game.prototype.shiftUp = function(){
 
 	}
+	
 	Game.prototype.shiftDown = function() {
 
 	};
@@ -310,6 +298,7 @@ var Match3 = (function(){
 		var thereIsMatches = game.checkMatches();
 		if (thereIsMatches > 1){
 			game.fillInTiles();
+			game.renderIcons();
 		}
 	}
 
@@ -317,7 +306,7 @@ var Match3 = (function(){
 
 
 	return {
-		init: init
+		init: init,
 		
 
 
@@ -333,5 +322,11 @@ $(document).on('ready', function() {
 	// $('#x1_y1').append(ninjashadow.create());
 	 // Game.init();
 	 Match3.init();
+
+	 $('.left').click(game.shiftLeft);
+	 $('.right').click(game.shiftRight);
+	 $('.up').click(game.shiftUp);
+	 $('.down').click(game.shiftDown);
+
 
 });
