@@ -155,6 +155,9 @@ var Match3 = (function(){
 
 	Game.prototype.renderIcons = function(){
 
+		// var gridCellStatus = 
+
+
 		$('.empty').each(function(index, item){		
 			// var ans = generateIcon();
 
@@ -198,33 +201,36 @@ var Match3 = (function(){
 
 	Game.prototype.checkMatches = function(){
 		var len = ROWS - 2;
-		var numOfMatches;
+		var numOfMatches_horizontal;
+		var numOfMatches_vertical;
+		var numOfMatches_total = 0;
 		
 		//check for horizontal matches
 		for( var i=0; i<ROWS; i++){
 			var row = this.rows[i];
 			
 			for( var n=0; n<len; n++){
-				numOfMatches = 1;
+				numOfMatches_horizontal = 1;
 
 				for( var m=1; m<ROWS-n; m++){
 					if (row[n].type === row[m+n].type){
-						numOfMatches += 1;
+						numOfMatches_horizontal += 1;
 					}
 					else{
 						break;
 					}					
 				}
-				if (numOfMatches >= 3 ){
-					// for(var z=n; z<numOfMatches+n; z++){
+				if (numOfMatches_horizontal >= 3 ){
+					// for(var z=n; z<numOfMatches_horizontal+n; z++){
 					// 	row[z].matched = true;
 					// }
-					row.slice(n, n+numOfMatches).forEach(function(tile){
+					row.slice(n, n+numOfMatches_horizontal).forEach(function(tile){
 						tile.matched = true;
-						console.log("horizontal", i, n, numOfMatches)
+						console.log("horizontal", i, n, numOfMatches_horizontal)
 					})
 
-					n += numOfMatches;
+					n += numOfMatches_horizontal;
+					numOfMatches_total += numOfMatches_horizontal;
 				}				
 			}
 		}
@@ -240,37 +246,40 @@ var Match3 = (function(){
 			}
 
 			for( var n=0; n<len; n++){
-				numOfMatches = 1;
+				numOfMatches_vertical = 1;
 
 				for( var m=1; m<ROWS-n; m++){
 					if (column[n].type === column[m+n].type){
-						numOfMatches += 1;
+						numOfMatches_vertical += 1;
 					}
 					else{
 						break;
 					}					
 				}
-				if ( numOfMatches >= 3 ){
-					// for(var z=n; z<numOfMatches+n; z++){
+				if ( numOfMatches_vertical >= 3 ){
+					// for(var z=n; z<numOfMatches_vertical+n; z++){
 					// 	row[z].matched = true;
 					// }
-					column.slice(n, n+numOfMatches).forEach(function(tile){
+					column.slice(n, n+numOfMatches_vertical).forEach(function(tile){
 						tile.matched = true;
-						console.log("vertical", index, n, numOfMatches, tile.type)
+						console.log("vertical", index, n, numOfMatches_vertical, tile.type)
 					})
 
-					n += numOfMatches;
+					n += numOfMatches_vertical;
+					numOfMatches_total += numOfMatches_vertical;
+
 				}				
 			}
 			column = []; // empty column so to get the next index column in the array/index	
 		}
+		return numOfMatches_total;
 	}
 
 	Game.prototype.fillInTiles = function(){
 		this.rows.forEach(function(row){
-			row.forEach(function(tile){
-				if(tile.type === true){
-					tile = randomIcon();
+			row.forEach(function(tile, c){
+				if(tile.matched){
+					row[c] = randomIcon();
 				}
 			})
 		})
@@ -298,8 +307,10 @@ var Match3 = (function(){
 
 		game.generateIconList();
 		game.renderIcons();
-		game.checkMatches();
-		// game.fillInTiles();
+		var thereIsMatches = game.checkMatches();
+		if (thereIsMatches > 1){
+			game.fillInTiles();
+		}
 	}
 
 
