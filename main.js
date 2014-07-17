@@ -145,10 +145,10 @@ var Match3 = (function(){
 	Game.prototype.generateIconList = function(){
 		for(var i=0; i<ROWS; i++){
 			for(var j=0; j<ROWS; j++){
-				var nameClass = randomIcon();
+				var obj = randomIcon();
 				
-				this.rows[i].push(nameClass);
-				middleArray.push(nameClass);
+				this.rows[i].push(obj);
+				middleArray.push(obj);
 			}
 		}
 	}
@@ -195,10 +195,10 @@ var Match3 = (function(){
 		})
 	}
 
+
 	Game.prototype.checkMatches = function(){
 		var len = ROWS - 2;
 		var numOfMatches;
-		var matchedTilesCoordArray = [];
 		
 		//check for horizontal matches
 		for( var i=0; i<ROWS; i++){
@@ -224,11 +224,6 @@ var Match3 = (function(){
 						console.log("horizontal", i, n, numOfMatches)
 					})
 
-					var dummy = n;
-					for(n; n<dummy+numOfMatches; n++){
-						matchedTilesCoordArray.push([i, n]);
-					}
-
 					n += numOfMatches;
 				}				
 			}
@@ -237,8 +232,6 @@ var Match3 = (function(){
 		//check for vertical matches
 		var array = this.rows; // this.rows is the entire array/list
 		var column = [];
-		matchedTilesCoordArray = [];
-
 
 		for( var index=0; index<ROWS; index++){	
 
@@ -266,11 +259,6 @@ var Match3 = (function(){
 						console.log("vertical", index, n, numOfMatches, tile.type)
 					})
 
-					var dummy = n;
-					for(n; n<dummy+numOfMatches; n++){
-						matchedTilesCoordArray.push([index, n]);
-					}
-
 					n += numOfMatches;
 				}				
 			}
@@ -278,10 +266,16 @@ var Match3 = (function(){
 		}
 	}
 
-	// Game.prototype.fillInTiles = function(){
-	// 	var matchedTiles = 
+	Game.prototype.fillInTiles = function(){
+		this.rows.forEach(function(row){
+			row.forEach(function(tile){
+				if(tile.type === true){
+					tile = randomIcon();
+				}
+			})
+		})
 
-	// }
+	}
 
 
 
@@ -305,6 +299,7 @@ var Match3 = (function(){
 		game.generateIconList();
 		game.renderIcons();
 		game.checkMatches();
+		// game.fillInTiles();
 	}
 
 
