@@ -198,6 +198,7 @@ var Match3 = (function(){
 	Game.prototype.checkMatches = function(){
 		var len = ROWS - 2;
 		var numOfMatches;
+		var matchedTilesCoordArray = [];
 		
 		//check for horizontal matches
 		for( var i=0; i<ROWS; i++){
@@ -220,8 +221,15 @@ var Match3 = (function(){
 					// }
 					row.slice(n, n+numOfMatches).forEach(function(tile){
 						tile.matched = true;
-						// console.log("horizontal", i, n, numOfMatches)
+						console.log("horizontal", i, n, numOfMatches)
 					})
+
+					var dummy = n;
+					for(n; n<dummy+numOfMatches; n++){
+						matchedTilesCoordArray.push([i, n]);
+					}
+
+					n += numOfMatches;
 				}				
 			}
 		}
@@ -229,6 +237,8 @@ var Match3 = (function(){
 		//check for vertical matches
 		var array = this.rows; // this.rows is the entire array/list
 		var column = [];
+		matchedTilesCoordArray = [];
+
 
 		for( var index=0; index<ROWS; index++){	
 
@@ -253,21 +263,26 @@ var Match3 = (function(){
 					// }
 					column.slice(n, n+numOfMatches).forEach(function(tile){
 						tile.matched = true;
-						// console.log("vertical", index, n, numOfMatches, tile.type)
+						console.log("vertical", index, n, numOfMatches, tile.type)
 					})
+
+					var dummy = n;
+					for(n; n<dummy+numOfMatches; n++){
+						matchedTilesCoordArray.push([index, n]);
+					}
+
+					n += numOfMatches;
 				}				
 			}
-			column = []; // empty column so to get the next index column in the array/index
-						
-			
-			
+			column = []; // empty column so to get the next index column in the array/index	
 		}
-
-
-
-
-
 	}
+
+	// Game.prototype.fillInTiles = function(){
+	// 	var matchedTiles = 
+
+	// }
+
 
 
 	Game.prototype.shiftLeft = function(){
