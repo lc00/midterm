@@ -145,7 +145,7 @@ var Match3 = (function(){
 			for(var r=0; r<ROWS; r++){
 				for(var c=0; c<ROWS; c++){
 
-					var ans = this.rows[r][c].type;  // middleArray
+					var ans = this.rows[r][c].type;  // get an element from array
 
 					if( ans === "ninjaStar"){
 						var tile = new NinjaStar();
@@ -179,6 +179,7 @@ var Match3 = (function(){
 
 	}
 
+	var matchedList = [];
 
 	Game.prototype.checkMatches = function(){
 		var len = ROWS - 2;
@@ -205,10 +206,14 @@ var Match3 = (function(){
 					// for(var z=n; z<numOfMatches_horizontal+n; z++){
 					// 	row[z].matched = true;
 					// }
-					row.slice(n, n+numOfMatches_horizontal).forEach(function(tile){
+					row.slice(n, n+numOfMatches_horizontal).forEach(function(tile){						
 						tile.matched = true;
-						console.log("horizontal", i, n, numOfMatches_horizontal, tile.type)
+						console.log("horizontal", i, n, numOfMatches_horizontal, tile.type)					
 					})
+
+					for(var num=n; num<n+numOfMatches_horizontal; num++){	 //pushes matched tile coord					
+						matchedList.push( [i, num] );						 // into matchedList array
+					}
 
 					n += numOfMatches_horizontal;
 					numOfMatches_total += numOfMatches_horizontal;
@@ -246,6 +251,10 @@ var Match3 = (function(){
 						console.log("vertical", index, n, numOfMatches_vertical, tile.type)
 					})
 
+					for(var num=n; num<n+numOfMatches_vertical; num++){	 //pushes matched tile coord					
+						matchedList.push( [index, num] );						 // into matchedList array
+					}
+
 					n += numOfMatches_vertical;
 					numOfMatches_total += numOfMatches_vertical;
 
@@ -255,6 +264,15 @@ var Match3 = (function(){
 		}
 		return numOfMatches_total;
 	}
+
+	Game.prototype.highlight = function(){
+		for(var i=0; i<matchedList.length; i++){
+			var coord = matchedList[i];
+			$('#x' + coord[0] + '_y' + coord[1]).addClass('highlight');
+			console.log($('#x' + coord[0] + '_y' + coord[1]));
+		}
+	}
+
 
 	Game.prototype.fillInTiles = function(){  // this is to replace the icon objects that are 
 		this.rows.forEach(function(row){		// matched/flagged with newly generated icon objects 
@@ -348,26 +366,102 @@ $(document).on('ready', function() {
 
 	 $('.left').click(function(){
 	 	var index = $(this).data('index');
-	 	Match3.game.shiftLeft(index);
-	 	Match3.game.renderIcons();
+	 	Match3.game.shiftLeft(index);  // shiftLeft row in the array
+
+	 	var matchesAreFound = true;
+
+	 	while( matchesAreFound ){
+			var thereIsMatches = Match3.game.checkMatches();  // check matches in the array
+			
+			if (thereIsMatches > 1){
+				Match3.game.fillInTiles();  // in the array
+				Match3.game.renderIcons();
+				  // in the grid display
+			}
+
+			else {
+				Match3.game.renderIcons();  // render grid display based on the left shift in 
+				matchesAreFound = false;	// the array; 
+			}
+		}	
+	 // 	if (thereIsMatches > 1){
+
+	 // 		// Match3.game.highlight();		//highlight matched tiles in the grid
+
+		// 	Match3.game.fillInTiles();
+		// 	// Match3.game.renderIcons();
+		// }
+
+	 // 	else{
+	 // 		Match3.game.renderIcons();
+	 // 		console.log("wow")
+	 // 	}
 	 });
 
 	 $('.right').click(function(){
 	 	var index = $(this).data('index');
-	 	Match3.game.shiftRight(index);
-	 	Match3.game.renderIcons();
+	 	Match3.game.shiftRight(index);  // array
+
+	 	var matchesAreFound = true;
+
+	 	while( matchesAreFound ){
+			var thereIsMatches = Match3.game.checkMatches();  // check matches in the array
+			
+			if (thereIsMatches > 1){
+				Match3.game.fillInTiles();  // in the array
+				Match3.game.renderIcons();
+				  // in the grid display
+			}
+
+			else {
+				Match3.game.renderIcons();  // render grid display based on the left shift in 
+				matchesAreFound = false;	// the array; 
+			}
+		}	
 	 });
 
 	 $('.up').click(function(){
 	 	var index = $(this).data('index');
 	 	Match3.game.shiftUp(index);
-	 	Match3.game.renderIcons();
+
+		var matchesAreFound = true;
+
+	 	while( matchesAreFound ){
+			var thereIsMatches = Match3.game.checkMatches();  // check matches in the array
+			
+			if (thereIsMatches > 1){
+				Match3.game.fillInTiles();  // in the array
+				Match3.game.renderIcons();
+				  // in the grid display
+			}
+
+			else {
+				Match3.game.renderIcons();  // render grid display based on the left shift in 
+				matchesAreFound = false;	// the array; 
+			}
+		}	
 	 });
 
 	 $('.down').click(function(){
 	 	var index = $(this).data('index');
 	 	Match3.game.shiftDown(index);
-	 	Match3.game.renderIcons();
+
+		var matchesAreFound = true;
+
+	 	while( matchesAreFound ){
+			var thereIsMatches = Match3.game.checkMatches();  // check matches in the array
+			
+			if (thereIsMatches > 1){
+				Match3.game.fillInTiles();  // in the array
+				Match3.game.renderIcons();
+				  // in the grid display
+			}
+
+			else {
+				Match3.game.renderIcons();  // render grid display based on the left shift in 
+				matchesAreFound = false;	// the array; 
+			}
+		}	
 	 });
 
 });
