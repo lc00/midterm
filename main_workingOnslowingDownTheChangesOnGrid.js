@@ -206,13 +206,10 @@ var Match3 = (function(){
 					// for(var z=n; z<numOfMatches_horizontal+n; z++){
 					// 	row[z].matched = true;
 					// }
-					var type;
 					row.slice(n, n+numOfMatches_horizontal).forEach(function(tile){						
 						tile.matched = true;
-						type = tile.type;
-					})			
-					console.log("horizontal," + 'row_' + i + '_column_' + n + ',match of ' + numOfMatches_horizontal + ' of ' + type)					
-
+						console.log("horizontal", i, n, numOfMatches_horizontal, tile.type)					
+					})
 
 					for(var num=n; num<n+numOfMatches_horizontal; num++){	 //pushes matched tile coord					
 						matchedList.push( [i, num] );						 // into matchedList array
@@ -249,13 +246,10 @@ var Match3 = (function(){
 					// for(var z=n; z<numOfMatches_vertical+n; z++){
 					// 	row[z].matched = true;
 					// }
-					var type;
 					column.slice(n, n+numOfMatches_vertical).forEach(function(tile){
 						tile.matched = true;
-						type = tile.type;
-						// console.log("vertical", index, n, numOfMatches_vertical, tile.type)
+						console.log("vertical", index, n, numOfMatches_vertical, tile.type)
 					})
-					console.log("vertical," + 'row_' + i + '_column_' + n + ',match of ' + numOfMatches_vertical + ' of ' + type)					
 
 					for(var num=n; num<n+numOfMatches_vertical; num++){	 //pushes matched tile coord					
 						matchedList.push( [index, num] );						 // into matchedList array
@@ -271,11 +265,76 @@ var Match3 = (function(){
 		return numOfMatches_total;
 	}
 
-	Game.prototype.highlight = function(){
+	Game.prototype.blankOutHighlightedTiles = function(){
+
+		$('.highlight').empty();
+
+	// for(var i=0; i<matchedList.length; i++){
+		// 	var coord = matchedList[i];
+		// 	$('#x' + coord[0] + '_y' + coord[1]).empty();  //empty the tile in the grid cell
+
+
+		// 	// console.log($('#x' + coord[0] + '_y' + coord[1]));
+
+
+		// }
+	}
+
+	Game.prototype.newTilesInArray = function(){    // get new tiles for the matched tiles in the array
+		for(var i=0; i<matchedList.length; i++){
+			var coord = matchedList[i];
+			var r = coord[0];
+			var c = coord[1];
+			this.rows[r][c] = randomIcon();
+
+		}
+	}
+
+	var slowDownNewTilesInGrid = function(){
+		setInterval(function(){
+			game.newTilesInGrid();
+		}, 1000)
+	}
+
+	Game.prototype.newTilesInGrid = function(){
+		for(var i=0; i<matchedList.length; i++){
+			var coord = matchedList[i];
+			var r = coord[0];
+			var c = coord[1];
+
+			var iconName = this.rows[r][c].type;  // get an element from array
+
+			if( iconName === "ninjaStar"){
+				var tile = new NinjaStar();
+			}
+			else if( iconName === "ninjaSword"){
+				var tile = new NinjaSword();
+			}
+			else if( iconName === "ninjaShadow"){
+				var tile = new NinjaShadow();
+			}
+			else if( iconName === "energyDrink"){
+				var tile = new EnergyDrink();
+			}
+			else {
+				var tile = new SmokeBomb();
+			}
+
+			var tileEl = tile.create();
+
+			$('#x' + r + '_y' + c).append(tileEl); 		
+
+
+		}
+	}
+
+
+	Game.prototype.highlight = function(){    // in the grid
 		for(var i=0; i<matchedList.length; i++){
 			var coord = matchedList[i];
 			$('#x' + coord[0] + '_y' + coord[1]).addClass('highlight');
 			console.log($('#x' + coord[0] + '_y' + coord[1]));
+
 		}
 	}
 
@@ -291,21 +350,95 @@ var Match3 = (function(){
 
 	}
 
-
-	Game.prototype.shiftLeft = function(index){   // operation on the array
+	Game.prototype.shiftLeftGrid = function(index){
 		var row = this.rows[index];
-		var shifted = row.shift();
-		row.push(shifted);
+
+		var c = 0;			
+		var temp = $('#x' + index + '_y' + c).children();
+
+		for(var n=1; n<ROWS; n++ ){
+			row[index][c] = row[index][n];
+			c += 1;
+
+		}
+		row[index][c] = temp;
 
 	}
 
-	Game.prototype.shiftRight = function(index){
+	Game.prototype.shiftRightGrid = function(index){
+		var row = this.rows[index];
+
+		var c = 3;			
+		var temp = $('#x' + index + '_y' + c).children();
+
+		for(var n=ROWS-2; n>0; n-- ){
+			row[index][c] = row[index][n];
+			c -= 1;
+
+		}
+		row[index][c] = temp;
+
+	}	
+
+	Game.prototype.shiftUpGrid = function(index){
+		var array = this.rows; // this.rows is the entire array/list
+		var column = [];
+
+
+		for( var i=0; i<ROWS; i++){
+			column.push(array[i][index]);  //pushing the array item into column(array)
+		}
+
+
+		var c = 0;			
+		var temp = $('#x' + c + '_y' + index).children();
+
+		for(var i=0; i<ROWS; i++ ){
+			column[c][index] = column[i][index];
+			c += 1;
+
+		}
+		column[c][index] = temp;
+	}
+
+	Game.prototype.shiftDownGrid = function(index){
+		var array = this.rows; // this.rows is the entire array/list
+		var column = [];
+
+
+		for( var i=0; i<ROWS; i++){
+			column.push(array[i][index]);  //pushing the array item into column(array)
+		}
+
+
+		var c = 3;			
+		var temp = $('#x' + c + '_y' + index).children();
+
+		for(var i=ROWS-2; i>=0; i-- ){
+			column[i][index] = column[c][index];
+			c -= 1;
+
+		}
+		column[i][index] = temp;
+	}
+
+	Game.prototype.shiftLeftArray = function(index){   // operation on the array
+		var row = this.rows[index];
+		var shifted = row.shift();
+		row.push(shifted);
+		// callback.call(this, index);
+
+		// this.shiftLeftGrid(index);
+
+	}
+
+	Game.prototype.shiftRightArray = function(index){
 		var row = this.rows[index];
 		var popped = row.pop();
 		row.unshift(popped);
 	}
 	
-	Game.prototype.shiftUp = function(index){
+	Game.prototype.shiftUpArray = function(index){
 		var array = this.rows; // grab the array
 		var m = 0;			
 		var temp = array[m][index];
@@ -319,7 +452,7 @@ var Match3 = (function(){
 		
 	}
 	
-	Game.prototype.shiftDown = function(index) {
+	Game.prototype.shiftDownArray = function(index) {
 		var array = this.rows; // grab the array
 		var m = 3;			
 		var temp = array[m][index];
@@ -352,7 +485,8 @@ var Match3 = (function(){
 
 	return {
 		init: init,
-		game: game
+		game: game,
+		slowDownNewTilesInGrid: slowDownNewTilesInGrid
 
 		
 
@@ -372,20 +506,32 @@ $(document).on('ready', function() {
 
 	 $('.left').click(function(){
 	 	var index = $(this).data('index');
-	 	Match3.game.shiftLeft(index);  // shiftLeft row in the array
+	 	Match3.game.shiftLeftArray(index);  // shiftLeft row in the array
 
 	 	var matchesAreFound = true;
 
 	 	while( matchesAreFound ){
 			var thereIsMatches = Match3.game.checkMatches();  // check matches in the array
 			
-			if (thereIsMatches > 1){
-				Match3.game.fillInTiles();  // in the array
-				Match3.game.renderIcons();
+			if (thereIsMatches > 1){			
+				Match3.game.shiftLeftGrid(index);
+
+				Match3.game.blankOutHighlightedTiles();
+
+				// Match3.game.fillInTiles();  // in the array
+
+				Match3.game.newTilesInArray();		
+				Match3.slowDownNewTilesInGrid();
+
+				// Match3.game.newTilesInGrid();
+				// Match3.game.renderIcons();
 				  // in the grid display
 			}
 
 			else {
+
+
+
 				Match3.game.renderIcons();  // render grid display based on the left shift in 
 				matchesAreFound = false;	// the array; 
 			}
@@ -406,7 +552,7 @@ $(document).on('ready', function() {
 
 	 $('.right').click(function(){
 	 	var index = $(this).data('index');
-	 	Match3.game.shiftRight(index);  // array
+	 	Match3.game.shiftRightArray(index);  // array
 
 	 	var matchesAreFound = true;
 
@@ -428,7 +574,7 @@ $(document).on('ready', function() {
 
 	 $('.up').click(function(){
 	 	var index = $(this).data('index');
-	 	Match3.game.shiftUp(index);
+	 	Match3.game.shiftUpArray(index);
 
 		var matchesAreFound = true;
 
@@ -450,7 +596,7 @@ $(document).on('ready', function() {
 
 	 $('.down').click(function(){
 	 	var index = $(this).data('index');
-	 	Match3.game.shiftDown(index);
+	 	Match3.game.shiftDownArray(index);
 
 		var matchesAreFound = true;
 
