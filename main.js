@@ -268,30 +268,51 @@ var Match3 = (function(){
 	}
 
 
-
-
-
-	Game.prototype.shiftLeft = function(){   // operation on the array
-		// var index = $(this).data('index');
-		// var row = 
+	Game.prototype.shiftLeft = function(index){   // operation on the array
+		var row = this.rows[index];
+		var shifted = row.shift();
+		row.push(shifted);
 
 	}
 
-	Game.prototype.shiftRight = function(){
-
-	}
-	
-	Game.prototype.shiftUp = function(){
-
+	Game.prototype.shiftRight = function(index){
+		var row = this.rows[index];
+		var popped = row.pop();
+		row.unshift(popped);
 	}
 	
-	Game.prototype.shiftDown = function() {
+	Game.prototype.shiftUp = function(index){
+		var array = this.rows; // grab the array
+		var m = 0;			
+		var temp = array[m][index];
+
+		for(var n=1; n<ROWS; n++ ){
+			array[m][index] = array[n][index];
+			m += 1;
+
+		}
+		array[m][index] = temp;
+		
+	}
+	
+	Game.prototype.shiftDown = function(index) {
+		var array = this.rows; // grab the array
+		var m = 3;			
+		var temp = array[m][index];
+
+		for(var n=ROWS-2; n>=0; n-- ){
+			array[m][index] = array[n][index];
+			m -= 1;
+
+		}
+		array[m][index] = temp;
 
 	};
 
+	var game = new Game();
+
 	var init = function(){
 
-		var game = new Game();
 
 		game.generateIconList();
 		game.renderIcons();
@@ -307,6 +328,8 @@ var Match3 = (function(){
 
 	return {
 		init: init,
+		game: game
+
 		
 
 
@@ -323,10 +346,28 @@ $(document).on('ready', function() {
 	 // Game.init();
 	 Match3.init();
 
-	 $('.left').click(game.shiftLeft);
-	 $('.right').click(game.shiftRight);
-	 $('.up').click(game.shiftUp);
-	 $('.down').click(game.shiftDown);
+	 $('.left').click(function(){
+	 	var index = $(this).data('index');
+	 	Match3.game.shiftLeft(index);
+	 	Match3.game.renderIcons();
+	 });
 
+	 $('.right').click(function(){
+	 	var index = $(this).data('index');
+	 	Match3.game.shiftRight(index);
+	 	Match3.game.renderIcons();
+	 });
+
+	 $('.up').click(function(){
+	 	var index = $(this).data('index');
+	 	Match3.game.shiftUp(index);
+	 	Match3.game.renderIcons();
+	 });
+
+	 $('.down').click(function(){
+	 	var index = $(this).data('index');
+	 	Match3.game.shiftDown(index);
+	 	Match3.game.renderIcons();
+	 });
 
 });
